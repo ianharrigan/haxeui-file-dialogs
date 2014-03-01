@@ -14,12 +14,10 @@ class HaxeUIFileOpener {
 		if (options == null) {
 			options = { };
 		}
-		options.dir = (options.dir != null) ? options.dir : null;
 		options.title = (options.title != null) ? options.title : "Open File";
 		options.styleName = (options.styleName != null) ? options.styleName : "file-selection-popup";
-		options.readContents = (options.readContents != null) ? options.readContents : false;
 		
-		var controller:FileSelectionController = new FileSelectionController(options.dir, options.readContents);
+		var controller:FileSelectionController = new FileSelectionController(options);
 		var config:PopupConfig = new PopupConfig();
 		config.addButton(PopupButtonType.CONFIRM);
 		config.addButton(PopupButtonType.CANCEL);

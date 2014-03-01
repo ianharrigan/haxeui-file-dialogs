@@ -14,11 +14,10 @@ class HaxeUIFileSaver {
 		if (options == null) {
 			options = { };
 		}
-		options.dir = (options.dir != null) ? options.dir : null;
 		options.title = (options.title != null) ? options.title : "Save File";
 		options.styleName = (options.styleName != null) ? options.styleName : "file-selection-popup";
 		
-		var controller:FileSelectionController = new FileSelectionController(options.dir, false);
+		var controller:FileSelectionController = new FileSelectionController(options);
 		var config:PopupConfig = new PopupConfig();
 		config.addButton(PopupButtonType.CONFIRM);
 		config.addButton(PopupButtonType.CANCEL);

@@ -16,7 +16,7 @@ class Main {
 			var button:Button = new Button();
 			button.text = "Open";
 			button.onClick = function(e) {
-				FileDialogs.openFile({ dir: "C:/Temp" }, function(f:FileDetails) {
+				FileDialogs.openFile({ dir: "C:/Temp/_files", filter: "All Files:*.*;Text Files:*.txt;Images:*.png,*.jpg,*.bmp" }, function(f:FileDetails) {
 					trace("Open file: " + f.filePath);
 				});
 			}
@@ -27,7 +27,7 @@ class Main {
 			button.onClick = function(e) {
 				var details:FileDetails = new FileDetails();
 				details.contents = "Some text";
-				FileDialogs.saveFileAs( { dir: "C:/Temp" }, details, function(f:FileDetails) {
+				FileDialogs.saveFileAs( { dir: "C:/Temp/_files", filter: "All Files:*.*;Text Files:*.txt;Images:*.png,*.jpg,*.bmp" }, details, function(f:FileDetails) {
 					trace("Saved file: " + f.filePath);
 				});
 			}
