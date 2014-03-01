@@ -1,4 +1,5 @@
 Set of file dialogs for <a href="https://github.com/ianharrigan/haxeui">HaxeUI</a>
+================================
 
 Installation
 -------------------------
