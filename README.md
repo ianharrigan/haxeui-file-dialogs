@@ -1,6 +1,8 @@
 Set of file dialogs for <a href="https://github.com/ianharrigan/haxeui">HaxeUI</a>
 ================================
 
+<img src="https://raw.github.com/ianharrigan/haxeui-file-dialogs/master/docs/screen.jpg" />
+
 Installation
 -------------------------
 First install haxeui & haxeui-file-dialogs via haxelib:
