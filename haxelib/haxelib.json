@@ -1,0 +1,16 @@
+{
+    "name"         : "haxeui-file-dialogs",
+    "url"          : "https://github.com/ianharrigan/haxeui-file-dialogs",
+    "license"      : "MIT",
+    "tags"         : ["rich", "ui", "haxeui"],
+    "description"  : "File dialogs for HaxeUI",
+    "version"      : "0.1.0",
+    "releasenote"  : "",
+    "contributors" : ["ianharrigan"],
+    "dependencies" : {
+        "openfl"        : "",
+        "actuate"       : "",
+        "hscript"       : "",
+        "haxeui"       : ""
+    }
+}

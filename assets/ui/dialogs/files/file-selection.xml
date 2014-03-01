@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<vbox width="100%" height="300" autoSize="false">
+	<style>
+		.file-selection-popup {
+			width: 600;
+		}
+	</style>
+	<hbox id="path" width="100%">
+		
+	</hbox>
+	<listview id="contents" width="100%" height="100%">
+		<array>Item 1, Item 2, Item 3, Item 4, Item 5, Item 1, Item 2, Item 3, Item 4, Item 5</array>
+	</listview>
+	<hbox width="100%">
+		<textinput id="filename" width="100%" />
+		<list text="All Files" width="120">
+			<json>[
+				{"text": "All Files"},
+				{"text": "Text Files"}
+			]</json>
+		</list>
+	</hbox>
+</vbox>
