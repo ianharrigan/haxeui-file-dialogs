@@ -128,9 +128,9 @@ class FileSelectionController extends XMLController {
 		if (StringTools.endsWith(dir, "/") == false && StringTools.endsWith(dir, "\\") == false) {
 			dir += "/";
 		}
-		var newDir:String = FileSystemHelper.normalizePath(dir + contents.selectedItems[0].text);
+		var newDir:String = FileSystemHelper.normalizePath(dir + contents.selectedItems[0].data.text);
 		if (FileSystemHelper.isDirectory(newDir) == false) {
-			filename.text =  contents.selectedItems[0].text;
+			filename.text =  contents.selectedItems[0].data.text;
 		}
 	}
 	
@@ -140,7 +140,7 @@ class FileSelectionController extends XMLController {
 			dir += "/";
 		}
 
-		var newDir:String = FileSystemHelper.normalizePath(dir + contents.selectedItems[0].text);
+		var newDir:String = FileSystemHelper.normalizePath(dir + contents.selectedItems[0].data.text);
 		if (FileSystemHelper.isDirectory(newDir) == true) {
 			loadDirContents(newDir);
 		} else {
