@@ -1,21 +1,14 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <vbox width="100%" height="300" autoSize="false">
-	<style>
-		.file-selection-popup {
-			width: 600;
-		}
-	</style>
-	<hbox id="path" width="100%">
-		
-	</hbox>
+	<hbox id="path" width="100%"/>
 	<listview id="contents" width="100%" height="100%">
 	</listview>
 	<hbox width="100%">
 		<textinput id="filename" width="100%" />
-		<list text="All Files" id="filter" width="120">
+		<listSelector text="All Files" id="filter" width="120">
 			<json>
 				[ {"text": "All Files", "pattern": "*.*"} ]
 			</json>
-		</list>
+		</listSelector>
 	</hbox>
 </vbox>

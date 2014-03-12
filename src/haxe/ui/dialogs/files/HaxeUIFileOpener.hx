@@ -2,7 +2,6 @@ package haxe.ui.dialogs.files;
 
 import haxe.ui.toolkit.controls.popups.Popup;
 import haxe.ui.toolkit.core.PopupManager;
-import haxe.ui.toolkit.core.PopupManager.PopupConfig;
 import haxe.ui.toolkit.core.RootManager;
 
 class HaxeUIFileOpener {
@@ -16,14 +15,15 @@ class HaxeUIFileOpener {
 		}
 		options.title = (options.title != null) ? options.title : "Open File";
 		options.styleName = (options.styleName != null) ? options.styleName : "file-selection-popup";
+		options.width = (options.width != null) ? options.width : 600;
 		
 		var controller:FileSelectionController = new FileSelectionController(options);
-		var config:PopupConfig = new PopupConfig();
-		config.addButton(PopupButtonType.CONFIRM);
-		config.addButton(PopupButtonType.CANCEL);
+		var config:Dynamic = { };
+		config.buttons = [PopupButton.CONFIRM, PopupButton.CANCEL];
 		config.styleName = options.styleName;
-		var popup:Popup = PopupManager.instance.showCustom(RootManager.instance.roots[0], controller.view, options.title, config, function (e) {
-			if (e == PopupButtonType.CONFIRM) {
+		config.width = options.width;
+		var popup:Popup = PopupManager.instance.showCustom(controller.view, options.title, config, function (e) {
+			if (e == PopupButton.CONFIRM) {
 				var details = controller.selectedFile;
 				if (_fn != null) {
 					_fn(details);

@@ -3,9 +3,9 @@ package haxe.ui.dialogs.files;
 import haxe.ui.toolkit.containers.HBox;
 import haxe.ui.toolkit.containers.ListView;
 import haxe.ui.toolkit.controls.Button;
-import haxe.ui.toolkit.controls.selection.List;
+import haxe.ui.toolkit.controls.selection.ListSelector;
 import haxe.ui.toolkit.controls.TextInput;
-import haxe.ui.toolkit.core.PopupManager.PopupButtonType;
+import haxe.ui.toolkit.core.PopupManager;
 import haxe.ui.toolkit.core.XMLController;
 import haxe.ui.toolkit.events.UIEvent;
 
@@ -17,7 +17,7 @@ class FileSelectionController extends XMLController {
 	private var contents:ListView;
 	private var path:HBox;
 	private var filename:TextInput;
-	private var filter:List;
+	private var filter:ListSelector;
 
 	public function new(options:Dynamic = null) {
 		super("assets/ui/dialogs/files/file-selection.xml");
@@ -37,7 +37,7 @@ class FileSelectionController extends XMLController {
 		path = getComponentAs("path", HBox);
 		contents = getComponentAs("contents", ListView);
 		filename = getComponentAs("filename", TextInput);
-		filter = getComponentAs("filter", List);
+		filter = getComponentAs("filter", ListSelector);
 		
 		contents.addEventListener(UIEvent.CHANGE, _onListChange);
 		contents.addEventListener(UIEvent.DOUBLE_CLICK, _onListDblClick);
@@ -144,7 +144,7 @@ class FileSelectionController extends XMLController {
 		if (FileSystemHelper.isDirectory(newDir) == true) {
 			loadDirContents(newDir);
 		} else {
-			this.popup.clickButton(PopupButtonType.CONFIRM);
+			this.popup.clickButton(PopupButton.CONFIRM);
 		}
 	}
 	
