@@ -1,4 +1,5 @@
 package haxe.ui.dialogs.files;
+import openfl.events.IOErrorEvent;
 
 class FileDetails {
 	public function new() {
@@ -10,4 +11,8 @@ class FileDetails {
 	public var type(default, default):String;
 	public var size(default, default):Float;
 	public var filePath(default, default):String;
+	#if flash
+	/** Contains the error occured during file load/save */
+	public var error(default, default):IOErrorEvent; 
+	#end
 }
