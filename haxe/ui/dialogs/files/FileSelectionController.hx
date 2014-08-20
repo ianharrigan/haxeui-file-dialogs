@@ -9,6 +9,7 @@ import haxe.ui.toolkit.controls.TextInput;
 import haxe.ui.toolkit.core.PopupManager;
 import haxe.ui.toolkit.core.XMLController;
 import haxe.ui.toolkit.events.UIEvent;
+import pgr.dconsole.DC;
 
 class FileSelectionController extends XMLController {
 	private var _currentDir:String;
@@ -19,6 +20,11 @@ class FileSelectionController extends XMLController {
 	private var path:HBox;
 	private var filename:TextInput;
 	private var filter:ListSelector;
+	
+	private var backButton:Button;
+	private var backStack:Array<String> = new Array<String>();
+	private var forwardButton:Button;
+	private var forwardStack:Array<String> = new Array<String>();
 
 	public function new(options:Dynamic = null) {
 		super("assets/ui/dialogs/files/file-selection.xml");
@@ -39,11 +45,20 @@ class FileSelectionController extends XMLController {
 		contents = getComponentAs("contents", ListView);
 		filename = getComponentAs("filename", TextInput);
 		filter = getComponentAs("filter", ListSelector);
+		backButton = getComponentAs("back", Button);
+		forwardButton = getComponentAs("forward", Button);
 		
 		contents.addEventListener(UIEvent.CHANGE, _onListChange);
 		contents.addEventListener(UIEvent.DOUBLE_CLICK, _onListDblClick);
 		path.addEventListener(UIEvent.ADDED_TO_STAGE, _onInit);
 		filter.addEventListener(UIEvent.CHANGE, _onFilterChange);
+		backButton.addEventListener(UIEvent.CLICK, _onClickBack);
+		backButton.disabled = true;
+		forwardButton.addEventListener(UIEvent.CLICK, _onClickForward);
+		forwardButton.disabled = true;
+		
+		DC.monitorField(this, "backStack", "bstack");
+		DC.monitorField(this, "forwardStack", "fstack");
 	}
 	
 	
@@ -52,7 +67,19 @@ class FileSelectionController extends XMLController {
 		loadDirContents(_currentDir);
 	}
 	
-	private function loadDirContents(path:String = null):Void {
+	private function loadDirContents(path:String = null, goingBack:Bool = false, goingForward:Bool = false):Void {
+		if (_currentDir != null && _currentDir != FileSystemHelper.normalizePath(path)) {
+			if (goingBack) {
+				forwardStack.push(_currentDir);
+			} else if (goingForward) {
+				backStack.push(_currentDir);
+			} else { 
+				backStack.push(_currentDir);
+				forwardStack = new Array<String>();
+			}
+		}
+		verifyStacks();
+		
 		var pattern:String = getFilterPattern();
 		
 		contents.dataSource.removeAll();
@@ -87,6 +114,7 @@ class FileSelectionController extends XMLController {
 		
 		filename.text = "";
 		refreshPathControls(_currentDir);
+		
 	}
 	
 	private function getFilterPattern():String {
@@ -215,6 +243,36 @@ class FileSelectionController extends XMLController {
 			loadDirContents(value);
 		}
 		return value;
+	}
+	
+	private function _onClickBack(e:UIEvent):Void {
+		if (backButton.disabled) {
+			return; // disabled button click event bugfix.
+		}
+		var pth = backStack.pop();
+		loadDirContents(pth, true);
+	}
+	
+	private function _onClickForward(e:UIEvent):Void {
+		if (forwardButton.disabled) {
+			return; // disabled button click event bugfix.
+		}
+		var pth = forwardStack.pop();
+		loadDirContents(pth, false, true);
+	}
+	
+	function verifyStacks() {
+		if (backStack.length == 0) {
+			backButton.disabled = true;
+		} else {
+			backButton.disabled = false;
+		}
+		
+		if (forwardStack.length == 0) {
+			forwardButton.disabled = true;
+		} else {
+			forwardButton.disabled = false;
+		}
 	}
 	
 }
