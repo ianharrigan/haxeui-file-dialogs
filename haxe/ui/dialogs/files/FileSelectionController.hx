@@ -9,7 +9,6 @@ import haxe.ui.toolkit.controls.TextInput;
 import haxe.ui.toolkit.core.PopupManager;
 import haxe.ui.toolkit.core.XMLController;
 import haxe.ui.toolkit.events.UIEvent;
-import pgr.dconsole.DC;
 
 class FileSelectionController extends XMLController {
 	private var _currentDir:String;
@@ -57,8 +56,6 @@ class FileSelectionController extends XMLController {
 		forwardButton.addEventListener(UIEvent.CLICK, _onClickForward);
 		forwardButton.disabled = true;
 		
-		DC.monitorField(this, "backStack", "bstack");
-		DC.monitorField(this, "forwardStack", "fstack");
 	}
 	
 	
