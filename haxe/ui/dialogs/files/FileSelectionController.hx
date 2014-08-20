@@ -41,8 +41,12 @@ class FileSelectionController extends XMLController {
 		
 		contents.addEventListener(UIEvent.CHANGE, _onListChange);
 		contents.addEventListener(UIEvent.DOUBLE_CLICK, _onListDblClick);
+		path.addEventListener(UIEvent.ADDED_TO_STAGE, _onInit);
 		filter.addEventListener(UIEvent.CHANGE, _onFilterChange);
-
+	}
+	
+	
+	private function _onInit(e:UIEvent):Void {
 		populateFilter(_filter);
 		loadDirContents(_currentDir);
 	}
@@ -104,11 +108,24 @@ class FileSelectionController extends XMLController {
 	private function refreshPathControls(pathString:String):Void {
 		path.removeAllChildren();
 		var arr:Array<String> = pathString.split("/");
+		var buttons:Array<Button> = new Array<Button>();
+		var i:Int = 0;
 		for (a in arr) {
+			if (a == "") {
+				continue; // avoids last empty text button
+			}
 			var button:Button = new Button();
 			button.text = a;
 			button.addEventListener(UIEvent.CLICK, _onPathControlClick);
 			path.addChild(button);
+			buttons.push(button);
+		}
+		
+		// hide leftmost buttons while path hbox is overflowing
+		for (btn in buttons) {
+			if (path.layout.usableWidth <= 0 && buttons.indexOf(btn) != buttons.length - 1) {
+				btn.visible = false;
+			}
 		}
 	}
 	
@@ -176,4 +193,5 @@ class FileSelectionController extends XMLController {
 		}
 		return value;
 	}
+	
 }
