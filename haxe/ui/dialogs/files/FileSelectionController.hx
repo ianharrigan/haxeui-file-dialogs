@@ -1,5 +1,6 @@
 package haxe.ui.dialogs.files;
 
+import haxe.io.Path;
 import haxe.ui.toolkit.containers.HBox;
 import haxe.ui.toolkit.containers.ListView;
 import haxe.ui.toolkit.controls.Button;
@@ -58,9 +59,13 @@ class FileSelectionController extends XMLController {
 		if (path == null || path.length == 0) {
 			path = FileSystemHelper.getCwd();
 		}
-		
 		path = FileSystemHelper.normalizePath(path);
 		_currentDir = path;
+		var arr:Array<String> = Path.removeTrailingSlashes(path).split("/");
+		if (arr.length > 1) {
+			contents.dataSource.add( { text: "...", icon: "assets/ui/dialogs/files/types/parent-directory.png" } ); 
+		}
+		
 		var items:Array<String> = FileSystemHelper.readDirectory(path);
 		for (item in items) {
 			if (FileSystemHelper.isDirectory(path + "/" + item) == true) {
@@ -156,8 +161,26 @@ class FileSelectionController extends XMLController {
 		if (StringTools.endsWith(dir, "/") == false && StringTools.endsWith(dir, "\\") == false) {
 			dir += "/";
 		}
-
-		var newDir:String = FileSystemHelper.normalizePath(dir + contents.selectedItems[0].data.text);
+		
+		var newDir:String;
+		if (contents.selectedItems[0].data.text == "...") { // if parent-directory clicked
+			dir = Path.normalize(dir);
+			dir = Path.removeTrailingSlashes(dir);
+			
+			var arr = dir.split("/");
+			arr.pop();
+			newDir = Path.join(arr);
+			newDir += "/";
+			
+			// bugfix for isDirectory("C:/") returning false
+			if (arr.length == 1) {
+				loadDirContents(newDir);
+				return;
+			}
+		} else {
+			newDir = FileSystemHelper.normalizePath(dir + contents.selectedItems[0].data.text);
+		}
+		
 		if (FileSystemHelper.isDirectory(newDir) == true) {
 			loadDirContents(newDir);
 		} else {
