@@ -4,9 +4,9 @@
     "license"      : "MIT",
     "tags"         : ["rich", "ui", "haxeui"],
     "description"  : "File dialogs for HaxeUI",
-    "version"      : "0.1.0",
-    "releasenote"  : "",
-    "contributors" : ["ianharrigan"],
+    "version"      : "0.1.1",
+    "releasenote"  : "Updates for long pathname names",
+    "contributors" : ["ianharrigan", "ProG4mr"],
     "dependencies" : {
         "openfl"        : "",
         "actuate"       : "",

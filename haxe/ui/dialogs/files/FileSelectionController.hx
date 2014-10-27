@@ -108,7 +108,6 @@ class FileSelectionController extends XMLController {
 				contents.dataSource.add( { text: item, icon: getFileIcon(item) } );
 			}
 		}
-		
 		filename.text = "";
 		refreshPathControls(_currentDir);
 		

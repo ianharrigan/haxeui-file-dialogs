@@ -1,10 +1,27 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <vbox width="100%" height="300" autoSize="false">
 	<hbox width="100%">
-		<button id="back" text="<" verticalAlign="center" style="cornerRadius:20" />
-		<button id="forward" text=">" verticalAlign="center" style="cornerRadius:20" />
+		<style>
+			.file-selection-popup #back {
+				icon: "assets/ui/dialogs/files/arrow_left.png";
+			}
+			
+			.file-selection-popup #forward {
+				icon: "assets/ui/dialogs/files/arrow_right.png";
+			}
+			
+			.file-selection-popup #back:disabled {
+				icon: "assets/ui/dialogs/files/arrow_left_disabled.png";
+			}
+			
+			.file-selection-popup #forward:disabled {
+				icon: "assets/ui/dialogs/files/arrow_right_disabled.png";
+			}
+		</style>
+		<button id="back" verticalAlign="center" height="100%" />
+		<button id="forward" verticalAlign="center" height="100%" />
 		<spacer width="5"/>
-		<hbox id="path" width="100%" style="padding:2;borderColor:0xa5b8da;borderSize:1"/>
+		<hbox id="path" width="100%" style="padding:0;borderColor:0xa5b8da;borderSize:0"/>
 	</hbox>
 	<listview id="contents" width="100%" height="100%">
 	</listview>

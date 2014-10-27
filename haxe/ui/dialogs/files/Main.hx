@@ -10,7 +10,7 @@ import haxe.ui.toolkit.themes.GradientTheme;
 class Main {
 	public static function main() {
 		//Macros.addStyleSheet("styles/gradient/gradient.css");
-		//Toolkit.theme = new GradientTheme();
+		Toolkit.theme = new GradientTheme();
 		Toolkit.init();
 		Toolkit.openFullscreen(function(root:Root) {
 			var hbox:HBox = new HBox();
