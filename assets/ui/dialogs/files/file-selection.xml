@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <vbox width="100%" height="300" autoSize="false">
-	<hbox id="path" width="100%"/>
+	<hbox width="100%">
+		<button id="back" text="<" verticalAlign="center" style="cornerRadius:20" />
+		<button id="forward" text=">" verticalAlign="center" style="cornerRadius:20" />
+		<spacer width="5"/>
+		<hbox id="path" width="100%" style="padding:2;borderColor:0xa5b8da;borderSize:1"/>
+	</hbox>
 	<listview id="contents" width="100%" height="100%">
 	</listview>
 	<hbox width="100%">

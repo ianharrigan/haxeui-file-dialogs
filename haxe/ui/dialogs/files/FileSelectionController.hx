@@ -1,5 +1,6 @@
 package haxe.ui.dialogs.files;
 
+import haxe.io.Path;
 import haxe.ui.toolkit.containers.HBox;
 import haxe.ui.toolkit.containers.ListView;
 import haxe.ui.toolkit.controls.Button;
@@ -18,6 +19,11 @@ class FileSelectionController extends XMLController {
 	private var path:HBox;
 	private var filename:TextInput;
 	private var filter:ListSelector;
+	
+	private var backButton:Button;
+	private var backStack:Array<String> = new Array<String>();
+	private var forwardButton:Button;
+	private var forwardStack:Array<String> = new Array<String>();
 
 	public function new(options:Dynamic = null) {
 		super("assets/ui/dialogs/files/file-selection.xml");
@@ -38,25 +44,52 @@ class FileSelectionController extends XMLController {
 		contents = getComponentAs("contents", ListView);
 		filename = getComponentAs("filename", TextInput);
 		filter = getComponentAs("filter", ListSelector);
+		backButton = getComponentAs("back", Button);
+		forwardButton = getComponentAs("forward", Button);
 		
 		contents.addEventListener(UIEvent.CHANGE, _onListChange);
 		contents.addEventListener(UIEvent.DOUBLE_CLICK, _onListDblClick);
+		path.addEventListener(UIEvent.ADDED_TO_STAGE, _onInit);
 		filter.addEventListener(UIEvent.CHANGE, _onFilterChange);
-
+		backButton.addEventListener(UIEvent.CLICK, _onClickBack);
+		backButton.disabled = true;
+		forwardButton.addEventListener(UIEvent.CLICK, _onClickForward);
+		forwardButton.disabled = true;
+		
+	}
+	
+	
+	private function _onInit(e:UIEvent):Void {
 		populateFilter(_filter);
 		loadDirContents(_currentDir);
 	}
 	
-	private function loadDirContents(path:String = null):Void {
+	private function loadDirContents(path:String = null, goingBack:Bool = false, goingForward:Bool = false):Void {
+		if (_currentDir != null && _currentDir != FileSystemHelper.normalizePath(path)) {
+			if (goingBack) {
+				forwardStack.push(_currentDir);
+			} else if (goingForward) {
+				backStack.push(_currentDir);
+			} else { 
+				backStack.push(_currentDir);
+				forwardStack = new Array<String>();
+			}
+		}
+		verifyStacks();
+		
 		var pattern:String = getFilterPattern();
 		
 		contents.dataSource.removeAll();
 		if (path == null || path.length == 0) {
 			path = FileSystemHelper.getCwd();
 		}
-		
 		path = FileSystemHelper.normalizePath(path);
 		_currentDir = path;
+		var arr:Array<String> = Path.removeTrailingSlashes(path).split("/");
+		if (arr.length > 1) {
+			contents.dataSource.add( { text: "...", icon: "assets/ui/dialogs/files/types/parent-directory.png" } ); 
+		}
+		
 		var items:Array<String> = FileSystemHelper.readDirectory(path);
 		for (item in items) {
 			if (FileSystemHelper.isDirectory(path + "/" + item) == true) {
@@ -78,6 +111,7 @@ class FileSelectionController extends XMLController {
 		
 		filename.text = "";
 		refreshPathControls(_currentDir);
+		
 	}
 	
 	private function getFilterPattern():String {
@@ -104,11 +138,24 @@ class FileSelectionController extends XMLController {
 	private function refreshPathControls(pathString:String):Void {
 		path.removeAllChildren();
 		var arr:Array<String> = pathString.split("/");
+		var buttons:Array<Button> = new Array<Button>();
+		var i:Int = 0;
 		for (a in arr) {
+			if (a == "") {
+				continue; // avoids last empty text button
+			}
 			var button:Button = new Button();
 			button.text = a;
 			button.addEventListener(UIEvent.CLICK, _onPathControlClick);
 			path.addChild(button);
+			buttons.push(button);
+		}
+		
+		// hide leftmost buttons while path hbox is overflowing
+		for (btn in buttons) {
+			if (path.layout.usableWidth <= 0 && buttons.indexOf(btn) != buttons.length - 1) {
+				btn.visible = false;
+			}
 		}
 	}
 	
@@ -139,8 +186,26 @@ class FileSelectionController extends XMLController {
 		if (StringTools.endsWith(dir, "/") == false && StringTools.endsWith(dir, "\\") == false) {
 			dir += "/";
 		}
-
-		var newDir:String = FileSystemHelper.normalizePath(dir + contents.selectedItems[0].data.text);
+		
+		var newDir:String;
+		if (contents.selectedItems[0].data.text == "...") { // if parent-directory clicked
+			dir = Path.normalize(dir);
+			dir = Path.removeTrailingSlashes(dir);
+			
+			var arr = dir.split("/");
+			arr.pop();
+			newDir = Path.join(arr);
+			newDir += "/";
+			
+			// bugfix for isDirectory("C:/") returning false
+			if (arr.length == 1) {
+				loadDirContents(newDir);
+				return;
+			}
+		} else {
+			newDir = FileSystemHelper.normalizePath(dir + contents.selectedItems[0].data.text);
+		}
+		
 		if (FileSystemHelper.isDirectory(newDir) == true) {
 			loadDirContents(newDir);
 		} else {
@@ -176,4 +241,35 @@ class FileSelectionController extends XMLController {
 		}
 		return value;
 	}
+	
+	private function _onClickBack(e:UIEvent):Void {
+		if (backButton.disabled) {
+			return; // disabled button click event bugfix.
+		}
+		var pth = backStack.pop();
+		loadDirContents(pth, true);
+	}
+	
+	private function _onClickForward(e:UIEvent):Void {
+		if (forwardButton.disabled) {
+			return; // disabled button click event bugfix.
+		}
+		var pth = forwardStack.pop();
+		loadDirContents(pth, false, true);
+	}
+	
+	function verifyStacks() {
+		if (backStack.length == 0) {
+			backButton.disabled = true;
+		} else {
+			backButton.disabled = false;
+		}
+		
+		if (forwardStack.length == 0) {
+			forwardButton.disabled = true;
+		} else {
+			forwardButton.disabled = false;
+		}
+	}
+	
 }
