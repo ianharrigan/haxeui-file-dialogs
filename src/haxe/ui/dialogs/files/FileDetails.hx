@@ -10,4 +10,5 @@ class FileDetails {
 	public var type(default, default):String;
 	public var size(default, default):Float;
 	public var filePath(default, default):String;
+	public var userData(default, default):Dynamic;
 }
