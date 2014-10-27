@@ -17,6 +17,10 @@
 			.file-selection-popup #forward:disabled {
 				icon: "assets/ui/dialogs/files/arrow_right_disabled.png";
 			}
+			
+			.file-selection-popup #contents #container {
+				backgroundColor: -1;
+			}
 		</style>
 		<button id="back" verticalAlign="center" height="100%" />
 		<button id="forward" verticalAlign="center" height="100%" />
