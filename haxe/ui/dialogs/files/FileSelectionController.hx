@@ -14,6 +14,7 @@ class FileSelectionController extends XMLController {
 	private var _currentDir:String;
 	private var _readContents:Bool = false;
 	private var _filter:String = "All Files:*.*";
+	private var _openDirectory:Bool = false;
 	
 	private var contents:ListView;
 	private var path:HBox;
@@ -38,6 +39,9 @@ class FileSelectionController extends XMLController {
 			if (options.filter != null) {
 				_filter = options.filter;
 			}
+			if (options.openDirectory != null) {
+				_openDirectory = options.openDirectory;
+			}
 		}
 		
 		path = getComponentAs("path", HBox);
@@ -56,6 +60,9 @@ class FileSelectionController extends XMLController {
 		forwardButton.addEventListener(UIEvent.CLICK, _onClickForward);
 		forwardButton.disabled = true;
 		
+		if (_openDirectory) {
+			filter.visible = false;
+		}
 	}
 	
 	
@@ -97,15 +104,17 @@ class FileSelectionController extends XMLController {
 			}
 		}
 		
-		for (item in items) {
-			if (FileSystemHelper.isDirectory(path + "/" + item) == false) {
-				if (pattern != "*") {
-					var ext:String = FileType.getExtension(item);
-					if (pattern.indexOf(ext) == -1) {
-						continue;
+		if(!_openDirectory) {
+			for (item in items) {
+				if (FileSystemHelper.isDirectory(path + "/" + item) == false) {
+					if (pattern != "*") {
+						var ext:String = FileType.getExtension(item);
+						if (pattern.indexOf(ext) == -1) {
+							continue;
+						}
 					}
+					contents.dataSource.add( { text: item, icon: getFileIcon(item) } );
 				}
-				contents.dataSource.add( { text: item, icon: getFileIcon(item) } );
 			}
 		}
 		filename.text = "";
@@ -175,8 +184,8 @@ class FileSelectionController extends XMLController {
 			dir += "/";
 		}
 		var newDir:String = FileSystemHelper.normalizePath(dir + contents.selectedItems[0].data.text);
-		if (FileSystemHelper.isDirectory(newDir) == false) {
-			filename.text =  contents.selectedItems[0].data.text;
+		if (_openDirectory || FileSystemHelper.isDirectory(newDir) == false) {
+			filename.text = contents.selectedItems[0].data.text;
 		}
 	}
 	
